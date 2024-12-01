@@ -6,6 +6,7 @@ import { LatLngExpression, LatLngTuple } from 'leaflet';
 import "leaflet/dist/leaflet.css";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
 import "leaflet-defaulticon-compatibility";
+import { useEffect } from "react";
 
 interface MapProps {
     posix: LatLngExpression | LatLngTuple,
@@ -13,11 +14,23 @@ interface MapProps {
 }
 
 const defaults = {
-    zoom: 19,
+    zoom: 12,
 }
 
 const Map = (Map: MapProps) => {
     const { zoom = defaults.zoom, posix } = Map
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    console.log(position.coords.latitude, position.coords.longitude);
+                },
+                (error) => console.error(error)
+            );
+        }
+    }, []);
+    
 
     return (
         <MapContainer
