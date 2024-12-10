@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LatLngExpression, LatLngTuple } from 'leaflet';
 
 const Map = dynamic(() =>  import('@/app/components/Map'), {
@@ -10,6 +10,14 @@ const Map = dynamic(() =>  import('@/app/components/Map'), {
 });
 
 export default function MapClientWrapper() {
+
+    const Map = useMemo(() => dynamic(
+        () => import('@/app/components/Map'),
+        {
+            loading: () => <p>A map is loading</p>,
+            ssr: false
+        }
+    ), [])
     
     const [posix, setPosix] = useState<LatLngExpression | LatLngTuple>([4.79029, -75.69003]);
 
